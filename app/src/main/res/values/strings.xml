@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Stores</string>
+    <string name="required_input">Required</string>
+    <string name="create_store_fragment_title">Create Store</string>
+    <string name="edit_store_fragment_title">Edit Store</string>
+    <string name="edit_store_fragment_args_id">ID</string>
+    <string name="menu_save_store_title">Save</string>
+    <string name="no_compatible_app">did not found a compatible app for this link</string>
+    <string name="store_item_lc_options">what would you do?</string>
+    <string name="delete_store_advise">The store will be permanently deleted, do you want to do?</string>
+    <string name="confirm_dialog_store_afirmative">Continue</string>
+    <string name="confirm_dialog_negative">Cancel</string>
+    <string name="no_web_msg">this store do not have website</string>
+    <string name="invalid_url">this url is invalid</string>
+    <string name="invalid_field_msg">review the required fields</string>
+    <string name="successful_store_creation_msg">Store created</string>
+    <string name="successful_store_update_msg">Store updated</string>
+    <string name="store_lc_website">Go to website</string>
+    <string name="store_lc_delete">Delete</string>
+    <string name="store_lc_call">Call</string>
+    <string name="input_hint_photo_url">Photo URL</string>
+    <string name="input_hint_phone">Phone</string>
+    <string name="input_hint_name">Name</string>
+    <string name="input_hint_website">Website</string>
+</resources>

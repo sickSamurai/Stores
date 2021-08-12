@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="img_card_height">200dp</dimen>
+    <dimen name="common_spacing_min">8dp</dimen>
+    <dimen name="common_spacing_default">16dp</dimen>
+    <dimen name="img_photo_thumb">88dp</dimen>
+</resources>

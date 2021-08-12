@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tiendas</string>
+    <string name="required_input">Obligatorio</string>
+    <string name="create_store_fragment_title">Crear Tienda</string>
+    <string name="edit_store_fragment_title">Editar Tienda</string>
+    <string name="edit_store_fragment_args_id">ID</string>
+    <string name="menu_save_store_title">Guardar</string>
+    <string name="no_compatible_app">No se encontro una app compatible con este enlace</string>
+    <string name="store_item_lc_options">¿Qué deseas hacer?</string>
+    <string name="delete_store_advise">La tienda se eliminara de forma permanente ¿Qué deseas hacer?</string>
+    <string name="confirm_dialog_store_afirmative">Continuar</string>
+    <string name="confirm_dialog_negative">Cancelar</string>
+    <string name="no_web_msg">Está pagina no tiene un sitio web</string>
+    <string name="invalid_url">Esta URL es invalida</string>
+    <string name="invalid_field_msg">Revisa los campos requeridos</string>
+    <string name="successful_store_creation_msg">Tienda creada</string>
+    <string name="successful_store_update_msg">Tienda actualizada</string>
+    <string name="store_lc_call">Llamar</string>
+    <string name="store_lc_website">Ir al sitio web</string>
+    <string name="store_lc_delete">Borrar</string>
+    <string name="input_hint_name">Nombre</string>
+    <string name="input_hint_phone">Telefono</string>
+    <string name="input_hint_website">Sitio Web</string>
+    <string name="input_hint_photo_url">URL de la foto</string>
+</resources>
