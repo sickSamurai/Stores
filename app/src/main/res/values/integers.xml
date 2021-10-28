@@ -4,5 +4,5 @@
     <integer name="max_store_name_chars">50</integer>
     <integer name="lines_url_website">2</integer>
     <integer name="lines_photo_url">4</integer>
-    <integer name="grid_columns">2</integer>
+    <integer name="grid_columns_number">2</integer>
 </resources>

@@ -1,4 +1,4 @@
-package com.BlackPanthers.stores
+package com.panthers.stores
 
 import org.junit.Test
 

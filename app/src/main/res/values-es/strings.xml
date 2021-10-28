@@ -9,8 +9,8 @@
     <string name="no_compatible_app">No se encontro una app compatible con este enlace</string>
     <string name="store_item_lc_options">¿Qué deseas hacer?</string>
     <string name="delete_store_advise">La tienda se eliminara de forma permanente ¿Qué deseas hacer?</string>
-    <string name="confirm_dialog_store_afirmative">Continuar</string>
-    <string name="confirm_dialog_negative">Cancelar</string>
+    <string name="confirm_dialog_to_delete_store_afirmative_option">Continuar</string>
+    <string name="confirm_dialog_to_delete_store_negative_option">Cancelar</string>
     <string name="no_web_msg">Está pagina no tiene un sitio web</string>
     <string name="invalid_url">Esta URL es invalida</string>
     <string name="invalid_field_msg">Revisa los campos requeridos</string>
@@ -23,4 +23,5 @@
     <string name="input_hint_phone">Telefono</string>
     <string name="input_hint_website">Sitio Web</string>
     <string name="input_hint_photo_url">URL de la foto</string>
+    <string name="store_img_description">store\'s image</string>
 </resources>

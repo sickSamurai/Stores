@@ -8,8 +8,8 @@
     <string name="no_compatible_app">did not found a compatible app for this link</string>
     <string name="store_item_lc_options">what would you do?</string>
     <string name="delete_store_advise">The store will be permanently deleted, do you want to do?</string>
-    <string name="confirm_dialog_store_afirmative">Continue</string>
-    <string name="confirm_dialog_negative">Cancel</string>
+    <string name="confirm_dialog_to_delete_store_afirmative_option">Continue</string>
+    <string name="confirm_dialog_to_delete_store_negative_option">Cancel</string>
     <string name="no_web_msg">this store do not have website</string>
     <string name="invalid_url">this url is invalid</string>
     <string name="invalid_field_msg">review the required fields</string>
@@ -22,4 +22,5 @@
     <string name="input_hint_phone">Phone</string>
     <string name="input_hint_name">Name</string>
     <string name="input_hint_website">Website</string>
+    <string name="store_img_description">store\'s image</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.BlackPanthers.stores
+package com.panthers.stores
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

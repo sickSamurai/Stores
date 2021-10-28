@@ -1,29 +1,37 @@
-package com.BlackPanthers.stores
+package com.panthers.stores.mainModule
 
-
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.util.Patterns
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.BlackPanthers.stores.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.panthers.stores.*
+import com.panthers.stores.database.entities.Store
+import com.panthers.stores.databinding.ActivityMainBinding
+import com.panthers.stores.editModule.SaveStoreDataFragment
+import com.panthers.stores.editModule.viewModel.SaveStoreDataViewModel
+import com.panthers.stores.mainModule.adapter.ItemStoreController
+import com.panthers.stores.mainModule.adapter.StoreListAdapter
+import com.panthers.stores.mainModule.viewModel.MainViewModel
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var storeAdapter: StoreAdapter
+    private lateinit var storeListAdapter: StoreListAdapter
+    private lateinit var mainViewModel: MainViewModel
+    private lateinit var saveStoreDataViewModel: SaveStoreDataViewModel
+
     private val itemStoreController = object : ItemStoreController {
-        override fun onItemStoreClick(id: Long) {
-            val args = Bundle()
-            args.putLong(getString(R.string.edit_store_fragment_args_id), id)
-            launchEditStoreFragment(args)
+        override fun onItemStoreClick(store: Store) {
+            launchEditStoreFragment(store.id)
         }
 
         override fun onItemStoreLongClick(store: Store): Boolean {
@@ -36,11 +44,25 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         }
     }
 
+    private fun setupViewModel() {
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        saveStoreDataViewModel = ViewModelProvider(this).get(SaveStoreDataViewModel::class.java)
+        saveStoreDataViewModel.getFABVisibilityLiveData().observe(this) { isVisible -> if (isVisible) showFAB() else hideFAB() }
+        mainViewModel.getVisibiltyOfProgressBarLiveData().observe(this) { binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE }
+        mainViewModel.getStoresLiveData().observe(this) { stores ->
+            mainViewModel.changeProgressBarVisibility(true)
+            storeListAdapter.submitList(stores)
+            mainViewModel.changeProgressBarVisibility(false)
+        }
+        //editStoreViewModel.getStoreCreatedLiveData().observe(this) { createdStore -> }
+        //editStoreViewModel.getStoreEditedLiveData().observe(this) { editedStore -> }
+    }
+
     private fun setupRecyclerView() {
         binding.recyclerView.apply {
             setHasFixedSize(true)
-            adapter = this@MainActivity.storeAdapter
-            layoutManager = GridLayoutManager(this@MainActivity, resources.getInteger(R.integer.grid_columns))
+            adapter = this@MainActivity.storeListAdapter
+            layoutManager = GridLayoutManager(this@MainActivity, resources.getInteger(R.integer.grid_columns_number))
             addItemDecoration(object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                     super.getItemOffsets(outRect, view, parent, state)
@@ -50,62 +72,45 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         }
     }
 
-    suspend fun chargeStoresFromDB() {
-        val stores = withContext(Dispatchers.IO) { StoreApp.db.storeDAO().getAll() }
-        storeAdapter.setStores(stores)
-    }
-
-    private fun disposeStoreOptions(store: Store){
+    private fun disposeStoreOptions(store: Store) {
         val options = resources.getStringArray(R.array.store_lc_options)
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.store_item_lc_options)
-            .setItems(options, DialogInterface.OnClickListener { dialogInterface, i ->
+            .setItems(options) { dialogInterface, i ->
                 when (i) {
                     0 -> dial(store.phone)
                     1 -> tryGoToWebSite(store.website)
-                    2 -> if (confirmDelete()) deleteStore(store)
+                    2 -> confirmDelete(store)
                 }
-            }).show()
+            }.show()
     }
 
-    private fun confirmDelete(): Boolean {
-        var delete = false
+    private fun confirmDelete(store: Store) {
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.delete_store_advise)
-            .setPositiveButton(R.string.confirm_dialog_store_afirmative) { dialogInterface, i -> delete = true }
-            .setNegativeButton(R.string.confirm_dialog_negative) { dialogInterface, i -> delete = false }
+            .setPositiveButton(R.string.confirm_dialog_to_delete_store_afirmative_option) { _, _ -> deleteStore(store) }
+            .setNegativeButton(R.string.confirm_dialog_to_delete_store_negative_option, null)
             .show()
-        return delete
     }
 
-    fun showBtnAdd() {
-        binding.btnAdd.show()
+    fun showFAB() {
+        binding.floatingActionButton.show()
     }
 
-    fun hideBtnAdd() {
-        binding.btnAdd.hide()
-    }
-
-    fun addStoreItem(store: Store) {
-        storeAdapter.addStore(store)
-    }
-
-    fun editStoreItem(store: Store) {
-        storeAdapter.editStore(store)
-    }
-
-    private fun toggleStoreFavorability(store: Store) {
-        store.apply { isFavorite = !isFavorite }
-        launch(Dispatchers.IO) { StoreApp.db.storeDAO().editStore(store) }
-        editStoreItem(store)
+    fun hideFAB() {
+        binding.floatingActionButton.hide()
     }
 
     fun deleteStore(store: Store) {
-        launch(Dispatchers.IO) { StoreApp.db.storeDAO().deleteStore(store) }
-        storeAdapter.deleteStore(store)
+        mainViewModel.deleteStore(store)
+        Toast.makeText(applicationContext, "store#$store.id deleted", Toast.LENGTH_SHORT)
     }
 
-    private fun startIntent(intent: Intent){
+    private fun toggleStoreFavorability(store: Store) {
+        mainViewModel.toggleStoreFavorability(store)
+    }
+
+    private fun startIntent(intent: Intent) {
         if (intent.resolveActivity(packageManager) != null) startActivity(intent)
         else Snackbar.make(binding.root, R.string.no_compatible_app, Snackbar.LENGTH_SHORT).show()
     }
@@ -126,9 +131,10 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         }
     }
 
-    private fun launchEditStoreFragment(args: Bundle? = null) {
-        val fragment = EditStoreFragment()
-        if (args != null) fragment.arguments = args
+    private fun launchEditStoreFragment(id: Long?) {
+        if (id != null) saveStoreDataViewModel.retrieveSelectedStoreFromDB(id)
+        else saveStoreDataViewModel.setSelectedStoreToNull()
+        val fragment = SaveStoreDataFragment()
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.add(R.id.container_activity_main, fragment)
@@ -136,22 +142,18 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         fragmentTransaction.commit()
     }
 
-    fun onBtnAddClick() {
-        launchEditStoreFragment()
-        hideBtnAdd()
+    fun onFABClick() {
+        launchEditStoreFragment(null)
+        saveStoreDataViewModel.hideFAB()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        storeAdapter = StoreAdapter(mutableListOf(), itemStoreController)
-        binding.btnAdd.setOnClickListener { onBtnAddClick() }
+        storeListAdapter = StoreListAdapter(itemStoreController)
+        binding.floatingActionButton.setOnClickListener { onFABClick() }
+        setupViewModel()
         setupRecyclerView()
         setContentView(binding.root)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        launch { chargeStoresFromDB() }
     }
 }
